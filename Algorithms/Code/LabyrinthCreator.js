@@ -5,7 +5,7 @@ canv.height = 1000;
 
 let ctx = canv.getContext("2d");
 
-let rows = 99;
+let rows = 159;
 let columns = 99;
 let lol = Labyrinth(matrixArray(rows, columns), rows, columns);
 
@@ -13,7 +13,7 @@ for(let i = 0; i < rows; i++){
     for(let j = 0; j < columns; j++){
         
         if(lol[i][j] == 1){
-            ctx.fillStyle = 'red';
+            ctx.fillStyle = 'black';
             ctx.fillRect(i*10, j*10, 10, 10);
         }else{
             ctx.fillStyle = 'gray';
