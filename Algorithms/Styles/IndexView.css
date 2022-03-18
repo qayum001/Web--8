@@ -1,0 +1,51 @@
+body{
+    background-color: #000910;
+    margin: 0px;
+    min-width: 1920px;
+    min-height: 1080px;
+    font-family: 'Fredoka', sans-serif;
+}
+.header{
+    background-color: #000910;
+    min-height: 40px;
+    min-width: 1920px;
+    height: 40px;
+    font-size: 30px;
+}
+.AlgorithmButtons{
+    display: flex;
+    flex-direction: column;    
+    margin-left: 560px;
+    margin-top: 280px;
+    min-width: 800px;
+    min-height: 395px;
+    width: 800px;
+    height: 395px;
+}
+.top-buttons{
+    min-width: 800px;
+    min-height: 195px;
+    width: 800px;
+    height: 195px;
+    padding-top: 5px;
+}
+.bottom-buttons{
+    min-width: 800px;
+    min-height: 200px;
+    width: 800px;
+    height: 200px;
+    
+}
+button{
+    width: 260px;
+    height: 190px;
+    float: left;
+    border: 2px solid red;
+    padding: 0px;
+    margin-left: 5px;
+    border-radius: 15px;
+    font-size: 30px;
+}
+button:hover {
+    background-color: blue;
+}
