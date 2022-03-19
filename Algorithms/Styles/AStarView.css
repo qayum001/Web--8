@@ -21,6 +21,9 @@ body{
     width: 1590px;
     height: 990px;
     padding: 5px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
 }
 .settings{
     background-color: #00457a;
