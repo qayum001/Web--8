@@ -2,20 +2,63 @@ let canv = document.getElementById("matrix");
 let ctx = canv.getContext("2d");
 
 let rows = 70;
-let columns = 10;
+let columns = 70;
+let pixelSize = 5;
 
-canv.width = rows * 10;
-canv.height = columns * 10;
+let maxRows = 1590 / pixelSize;
+let maxColumns = 1000 / pixelSize;
 
+let pointToDrow = new Array();//collects points to drow with printPoint()
 
-let pointToDrow = new Array();
+canv.width = rows * pixelSize;
+canv.height = columns * pixelSize;
 
-let lol = Labyrinth(matrixArray(rows, columns), rows, columns);
+let lol = new Array();//contains Labyrinth
+
 window.requestAnimationFrame(printPoint);
 
 let indexToGetPoint = 0;
 
-function Labyrinth(lab, rows, columns){
+let isDrowable = false;
+let isSetBtnActive = false;
+let isRemuveBtnActive = false;
+
+function setWall(){
+    isSetBtnActive = true;
+    isRemuveBtnActive = false;
+}
+function removeWall(){
+    isSetBtnActive = false;
+    isRemuveBtnActive = true;
+}
+canv.onmousedown = function(){
+    isDrowable = true;
+}
+canv.onmouseup = function(){
+    isDrowable = false;
+}
+canv.onmousemove = function(event){//Wall Dorowing func
+    if(isDrowable){
+        let flag = true;
+        let x = event.offsetX;
+        let y = event.offsetY;
+        let correctX = x - (x % pixelSize);
+        let correctY = y - (y % pixelSize);
+        let matrixX = correctX / pixelSize;
+        let matrixy = correctY / pixelSize;
+        if(isSetBtnActive && lol[matrixX][matrixy] == 0){
+            lol[matrixX][matrixy] = 1;
+            ctx.clearRect(correctX, correctY, pixelSize, pixelSize);
+            flag = false;
+        }else if(isRemuveBtnActive && lol[matrixX][matrixy] == 1 && flag) {
+            lol[matrixX][matrixy] = 0;
+            ctx.fillStyle = 'gray';
+            ctx.fillRect(correctX, correctY, pixelSize, pixelSize);
+        }
+        flag = true;
+    } 
+}
+function Labyrinth(lab, rows, columns){//returns Labyrinth
     let s = point(rand(1, rows / 2) * 2 - 1, rand(1, columns / 2) * 2 - 1, 'trail');// s = start point
     pointToDrow.push(s);
     setPointType(lab, s.x, s.y, 0);
@@ -100,11 +143,34 @@ function Labyrinth(lab, rows, columns){
     //     lab = fixedColumn(lab, rows, columns)
     return lab;
 }
-console.log(pointToDrow.length);
-function printPoint(){
+widthSetter.oninput = function(){
+    pointToDrow = [];
+    rows = document.getElementById('widthSetter').value;
+    if(rows > maxRows){
+        rows = maxRows;
+    }
+    canv.width = rows * pixelSize;
+}
+heightSetter.oninput = function(){
+    pointToDrow = [];
+    columns = document.getElementById('heightSetter').value;
+    if(rows > maxColumns){
+        columns = maxColumns;
+    }
+    canv.height = columns * pixelSize;
+}
+function Create(){//Creates new Labyrinth
+    if(pointToDrow.length > 0){
+        pointToDrow = [];
+    }
+    ctx.clearRect(0, 0, canv.width, canv.height);
+    console.log('create');   
+    lol = Labyrinth(matrixArray(rows, columns), rows, columns);
+    printPoint();
+}
+function printPoint(){//Animates how Labyrinth was drawning up
 
-    let currentPoints = pointToDrow.splice(0, Math.ceil(pointToDrow.length * 0.025));
-    console.log(pointToDrow.length);
+    let currentPoints = pointToDrow.splice(0, Math.ceil(pointToDrow.length * 0.0067));
     for(let i = 0; i < currentPoints.length; i++){
         if(currentPoints[i].type == 'inter'){
             ctx.fillStyle = 'red';
@@ -112,7 +178,7 @@ function printPoint(){
         if(currentPoints[i].type == 'trail'){
             ctx.fillStyle = 'gray';
         }
-        ctx.fillRect(currentPoints[i].x*10, currentPoints[i].y*10, 10, 10);   
+        ctx.fillRect(currentPoints[i].x * pixelSize, currentPoints[i].y * pixelSize, pixelSize, pixelSize);   
     }
     if(pointToDrow.length > 0){
         window.requestAnimationFrame(printPoint);
