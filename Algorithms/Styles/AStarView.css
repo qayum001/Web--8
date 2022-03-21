@@ -122,7 +122,7 @@ p{
     align-items: center;
     justify-content: center;
 }
-#launch{
+.globalBtns{
     width: 240px;
     height: 40px;
     border: 2px solid #000910;

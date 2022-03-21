@@ -20,29 +20,46 @@ window.requestAnimationFrame(printPoint);
 
 let indexToGetPoint = 0;
 
-let isDrowable = false;
+let isDrowable = false;//to drow on canvas
 let isSetBtnActive = false;
 let isRemuveBtnActive = false;
-// function startPosBtn(){
 
-// }
-function Launch(){
-    let sX = document.getElementById('startPositionX').value;
-    let sY = document.getElementById('startPositionY').value;
-    let fX = document.getElementById('finishPositionX').value;
-    let fY = document.getElementById('finishPositionY').value;
+let startPosSetter = false;
+let finishPosSetter = false;
 
-    FindPath(lol, point(sX, sY), point(fX, fY));
-    printPoint();
+let pointsToClear = [];//для очищения лабиринта от А*
+
+let correctX, correctY, matrixX, matrixy;
+
+function startPosBtn(){
+    startPosSetter = true;
 }
-// startPositionX.oninput = function(){
-//     startPoint.x = document.getElementById('startPositionX').value;
-//     console.log(startPoint.x);
-// }
-// startPositionY.oninput = function(){
-//     startPoint.y = document.getElementById('startPositionY').value;
-//     console.log(startPoint.y);
-// }
+function finishPosBtn(){
+    finishPosSetter = true;  
+}
+function Launch(){
+    let sX = Number(document.getElementById('startPositionX').value);
+    let sY = Number(document.getElementById('startPositionY').value);
+    let fX = Number(document.getElementById('finishPositionX').value);
+    let fY = Number(document.getElementById('finishPositionY').value);
+    
+    FindPath(lol, new point(sX, sY), new point(fX, fY));
+    printPoint();
+    pointsToClear = pointToDrowPath;
+    if(pointsToClear.length > 0){
+        Clear(pointsToClear, 'gray');
+    }
+}
+function ClearAStar(){
+    //console.log(pointsToClear.length);
+    //Clear(pointsToClear, 'gray');
+}
+function Clear(clearArr, color){// получает массив типа point который будет покрашен в данный цвет,
+    ctx.fillStyle = color;
+    for(let i = 0; i < clearArr.length; i++){
+        ctx.fillRect(clearArr[i].x * pixelSize, clearArr[i].y * pixelSize, pixelSize, pixelSize);        
+    }
+}
 function setWall(){
     isSetBtnActive = true;
     isRemuveBtnActive = false;
@@ -51,32 +68,54 @@ function removeWall(){
     isSetBtnActive = false;
     isRemuveBtnActive = true;
 }
+canv.onclick = function(event){    
+    let x = event.offsetX;
+    let y = event.offsetY;
+    correctX = x - (x % pixelSize);
+    correctY = y - (y % pixelSize);
+    matrixX = correctX / pixelSize;
+    matrixY = correctY / pixelSize;
+    
+    if(startPosSetter){
+        document.getElementById('startPositionX').value = matrixX;
+        document.getElementById('startPositionY').value = matrixY;
+        startPosSetter = false;
+    }
+    if(finishPosSetter){
+        document.getElementById('finishPositionX').value = matrixX;
+        document.getElementById('finishPositionY').value = matrixY;
+        finishPosSetter = false;
+    }
+
+}
 canv.onmousedown = function(){
     isDrowable = true;
 }
 canv.onmouseup = function(){
     isDrowable = false;
 }
-canv.onmousemove = function(event){//Wall Dorowing func
+canv.onmousemove = function(event){//Gets mouse pos and drows smth
+
+    let x = event.offsetX;
+    let y = event.offsetY;
+    correctX = x - (x % pixelSize);
+    correctY = y - (y % pixelSize);
+    matrixX = correctX / pixelSize;
+    matrixY = correctY / pixelSize;
+
     if(isDrowable){
-        let flag = true;
-        let x = event.offsetX;
-        let y = event.offsetY;
-        let correctX = x - (x % pixelSize);
-        let correctY = y - (y % pixelSize);
-        let matrixX = correctX / pixelSize;
-        let matrixy = correctY / pixelSize;
-        if(isSetBtnActive && lol[matrixX][matrixy] == 0){
-            lol[matrixX][matrixy] = 1;
+        let flag = true;//позволяет не перекрашивать один и тотже пиксель вовремя передвижения мыши
+        if(isSetBtnActive && lol[matrixX][matrixY] == 0){
+            lol[matrixX][matrixY] = 1;
             ctx.clearRect(correctX, correctY, pixelSize, pixelSize);
             flag = false;
-        }else if(isRemuveBtnActive && lol[matrixX][matrixy] == 1 && flag) {
-            lol[matrixX][matrixy] = 0;
+        }else if(isRemuveBtnActive && lol[matrixX][matrixY] == 1 && flag) {
+            lol[matrixX][matrixY] = 0;
             ctx.fillStyle = 'gray';
             ctx.fillRect(correctX, correctY, pixelSize, pixelSize);
         }
         flag = true;
-    } 
+    }
 }
 function Labyrinth(lab, rows, columns){//returns Labyrinth
     let s = point(rand(1, rows / 2) * 2 - 1, rand(1, columns / 2) * 2 - 1, 'trail');// s = start point
