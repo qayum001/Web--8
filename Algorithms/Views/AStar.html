@@ -34,8 +34,8 @@
             <div class="square">
                 <p>Start position</p>
                 <div class="size-inputs">
-                    <input/>
-                    <input/>
+                    <input type="number" id="startPositionX"/>
+                    <input type="number" id="startPositionY"/>
                 </div>
                 <div class="labCreate-btn">
                     <button class="setter" id="startPosBtn">Set on map</button>
@@ -52,12 +52,13 @@
                 </div>
             </div>
             <div class="start-btn">
-                <button id="launch">Launch</button>
+                <button id="launch" onclick="Launch()">Launch</button>
             </div>
         </div>
     </div>
     <div class="footer">
     </div>
-    <script src="../Code/LabyrinthCreator.js"></script>
+    <script src="../Code/AStar.js"></script>
+    <script src="../Code/LabyrinthCreator.js"></script>    
 </body>
 </html>

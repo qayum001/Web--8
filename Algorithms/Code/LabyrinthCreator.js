@@ -15,6 +15,7 @@ canv.height = columns * pixelSize;
 
 let lol = new Array();//contains Labyrinth
 
+window.requestAnimationFrame(printLabyrinth);
 window.requestAnimationFrame(printPoint);
 
 let indexToGetPoint = 0;
@@ -23,6 +24,13 @@ let isDrowable = false;
 let isSetBtnActive = false;
 let isRemuveBtnActive = false;
 
+let startPoint = new point(1, 1);
+
+function Launch(){
+    let finishPoint = new point(rows - 1, columns - 1);    
+    FindPath(lol, startPoint, finishPoint);
+    printPoint();
+}
 function setWall(){
     isSetBtnActive = true;
     isRemuveBtnActive = false;
@@ -146,6 +154,7 @@ function Labyrinth(lab, rows, columns){//returns Labyrinth
 widthSetter.oninput = function(){
     pointToDrow = [];
     rows = document.getElementById('widthSetter').value;
+    console.log("rows " + rows)
     if(rows > maxRows){
         rows = maxRows;
     }
@@ -154,7 +163,8 @@ widthSetter.oninput = function(){
 heightSetter.oninput = function(){
     pointToDrow = [];
     columns = document.getElementById('heightSetter').value;
-    if(rows > maxColumns){
+    console.log("columns " + columns)
+    if(columns > maxColumns){
         columns = maxColumns;
     }
     canv.height = columns * pixelSize;
@@ -164,12 +174,11 @@ function Create(){//Creates new Labyrinth
         pointToDrow = [];
     }
     ctx.clearRect(0, 0, canv.width, canv.height);
-    console.log('create');   
     lol = Labyrinth(matrixArray(rows, columns), rows, columns);
-    printPoint();
+    console.log(lol.length + " lenght");
+    printLabyrinth();
 }
-function printPoint(){//Animates how Labyrinth was drawning up
-
+function printLabyrinth(){//Animates how Labyrinth was drawning up
     let currentPoints = pointToDrow.splice(0, Math.ceil(pointToDrow.length * 0.0067));
     for(let i = 0; i < currentPoints.length; i++){
         if(currentPoints[i].type == 'inter'){
@@ -181,7 +190,7 @@ function printPoint(){//Animates how Labyrinth was drawning up
         ctx.fillRect(currentPoints[i].x * pixelSize, currentPoints[i].y * pixelSize, pixelSize, pixelSize);   
     }
     if(pointToDrow.length > 0){
-        window.requestAnimationFrame(printPoint);
+        window.requestAnimationFrame(printLabyrinth);
     }
 }
 function matrixArray(rows, columns) {//returns a matrix filled with Walls
