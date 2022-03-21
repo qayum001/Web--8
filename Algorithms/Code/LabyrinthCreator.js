@@ -23,14 +23,26 @@ let indexToGetPoint = 0;
 let isDrowable = false;
 let isSetBtnActive = false;
 let isRemuveBtnActive = false;
+// function startPosBtn(){
 
-let startPoint = new point(1, 1);
-
+// }
 function Launch(){
-    let finishPoint = new point(rows - 1, columns - 1);    
-    FindPath(lol, startPoint, finishPoint);
+    let sX = document.getElementById('startPositionX').value;
+    let sY = document.getElementById('startPositionY').value;
+    let fX = document.getElementById('finishPositionX').value;
+    let fY = document.getElementById('finishPositionY').value;
+
+    FindPath(lol, point(sX, sY), point(fX, fY));
     printPoint();
 }
+// startPositionX.oninput = function(){
+//     startPoint.x = document.getElementById('startPositionX').value;
+//     console.log(startPoint.x);
+// }
+// startPositionY.oninput = function(){
+//     startPoint.y = document.getElementById('startPositionY').value;
+//     console.log(startPoint.y);
+// }
 function setWall(){
     isSetBtnActive = true;
     isRemuveBtnActive = false;
