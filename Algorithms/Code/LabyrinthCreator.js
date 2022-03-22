@@ -86,7 +86,6 @@ canv.onclick = function(event){
         document.getElementById('finishPositionY').value = matrixY;
         finishPosSetter = false;
     }
-
 }
 canv.onmousedown = function(){
     isDrowable = true;
