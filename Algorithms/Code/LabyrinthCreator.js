@@ -295,15 +295,3 @@ function isClear(arr, x, y){// check wall(1)
         return false;
     }
 }
-function fixedRow(arr, rows, columns) {
-    for (let i = 0; i < rows; i++) {
-        arr[i][columns - 1] = 1;
-    }
-    return arr
-}
-function fixedColumn(arr, rows, columns) {
-    for (let i = 0; i < columns; i++) {
-        arr[rows - 1][i] = 1;
-    }
-    return arr
-}
