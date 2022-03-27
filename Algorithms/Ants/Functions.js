@@ -11,7 +11,7 @@ function wallMatrix(rows, columns) {//returns a matrix filled with Walls
 
 function AntSpawner(antCount, array){
     for(let i = 0; i < antCount; i++){
-        array.push(new TestAnts(colony.position, 1, 1, rand(0, 360), 'food', Number(rand(2000, 3000))));
+        array.push(new TestAnts(colony.position, 1, 1, rand(0, 360), 'food', Number(rand(20000, 30000))));
     }
 }
 
@@ -35,10 +35,10 @@ function inRange(num, left, right){
 }
 
 function search(world, obj, array){
-    let wayX = Math.ceil(obj.position.x) + 5;
-    let wayY = Math.ceil(obj.position.y) + 5;
-    for(let i = Math.ceil(obj.position.x); i < wayX; i++){
-        for(let j = Math.ceil(obj.position.y); j < wayY; j++){
+    let wayX = Math.ceil(obj.x);
+    let wayY = Math.ceil(obj.y);
+    for(let i = wayX - 2; i <= wayX + 2; i++){
+        for(let j = wayY - 2; j <= wayY + 2; j++){
             if(world.objects[i][j] instanceof Food){
                 array.push(world.objects[i][j]);
                 //console.log(inSight);
@@ -56,5 +56,32 @@ function resizeArray(array_1 = [], array_2 = [], coeff){//array_1 must be smalle
                 }
             }
         }
+    }
+}
+
+function GetNewAngle(point1, point2) {
+    if (point1.x == point2.x && point1.y > point2.y) {
+        return 0;
+    }
+    if (point1.x < point2.x && point.y > point2.y) {
+        return 45;
+    }
+    if (point1.x < point2.x && point.y == point2.y) {
+        return 90;
+    }
+    if (point1.x < point2.x && point.y < point2.y) {
+        return 135;
+    }
+    if (point1.x == point2.x && point.y < point2.y) {
+        return 180;
+    }
+    if (point1.x > point2.x && point.y < point2.y) {
+        return 225;
+    }
+    if (point1.x > point2.x && point.y == point2.y) {
+        return 270;
+    }
+    if (point1.x > point2.x && point.y > point2.y) {
+        return 315;
     }
 }

@@ -6,7 +6,7 @@ let food = new Array();
 
 let width = 1000;
 let height = 1000;
-let chunkSize = 5;
+let chunkSize = 10;// должен быть кратен 10
 
 let caveSpawnArray = wallMatrix(width/chunkSize, height/chunkSize);
 let strtPos = new Position(rand(1, (width/chunkSize) / 2) * 2 - 1, rand(1, (height/chunkSize) / 2) * 2 - 1);
@@ -24,6 +24,8 @@ let colony = new Colony(ColonyPosition, 5);
 let world;
 
 let worldView = new Image;// has world view in PNG
+
+let Pheromones = [];
 
 function generateWorld(){
     ctx.fillStyle = 'black';
@@ -53,14 +55,21 @@ function generateWorld(){
 
     worldView.src = canv.toDataURL();
 
-    AntSpawner(2000, ants);
+    AntSpawner(1300, ants);
     foodSpawner(10, food, world.objects);
 }
 
 generateWorld();
 
 function Render(){
-    ctx.fillStyle = 'red';
+    for(let i = 0; i < Pheromones.length; i++){
+        Pheromones[i].count -= 10;
+        if(Pheromones[i].count < 10){
+            world.objects[Pheromones[i].position.x][Pheromones[i].position.y] = 0;
+            Pheromones.splice(i, 1);
+        }
+    }
+    ctx.fillStyle = 'blue';
     for(let i = 0; i < ants.length; i++){
         let objsInSight = [];
         if(ants[i].satiety <= 0){
@@ -71,9 +80,13 @@ function Render(){
         ctx.arc(ants[i].position.x, ants[i].position.y, ants[i].radius, 0, Math.PI * 2, true);
         ctx.fill();
         ants[i] = ants[i].movement(world);
+        if(ants[i].PheramomeCount > 100){
+            ants[i].leavePheromone(world, Pheromones);
+            ants[i].PheramomeCount -= (ants[i].PheramomeCount * 0.01);
+        }
         ants[i].satiety--;
         search(world, ants[i], objsInSight);
-    }    
+    }
     ctx.fillStyle = 'green';
     for(let i = 0; i < food.length; i++){
         if(food[i].portion <= 0){

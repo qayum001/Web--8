@@ -12,12 +12,16 @@ class lol{
     constructor(s){
         this.s = s;
     }
+    a;
 }
 class kek{
     constructor(s){
         this.s = s;
     }
 }
+
+let a = new lol(2);
+console.log(a.a = 'ss');
 
 let array = [];
 let array2 = [];
