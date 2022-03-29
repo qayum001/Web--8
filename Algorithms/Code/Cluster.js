@@ -75,37 +75,17 @@ function SetLocateNewAstroids(mass, countAstroid) {
     let a_sum = Math.PI * 2 / countAstroid;
     for (let i = 0; i < countAstroid; i++) {
         let param;
-        switch(i) {
-            case 0:
-                param = 'red';
-                break;
-            case 1:
-                param = 'green';
-                break;
-            case 2:
-                param = 'blue';
-                break;
-            case 3:
-                param = 'goldenrod';
-                break;
-            case 4:
-                param = 'lime';
-                break;
-            case 5:
-                param = 'aquamarine';
-                break;
-            case 6:
-                param = 'violet';
-                break;
-            case 7:
-                param = 'salmon';//Сушенный лосось
-                break;
-            case 8:
-                param = 'yellow';
-                break;
-            case 9:
-                param = 'indigo';
-                break;
+        switch(i % 10) {
+            case 0:param = 'red'; break;
+            case 1:param = 'green'; break;
+            case 2:param = 'blue'; break;
+            case 3:param = 'goldenrod'; break;
+            case 4:param = 'lime'; break;
+            case 5:param = 'aquamarine'; break;
+            case 6:param = 'violet'; break;
+            case 7:param = 'salmon'; break;//Сушенный лосось
+            case 8:param = 'yellow'; break;
+            case 9:param = 'indigo'; break;
         }
         let AstroidX = Math.round(midX + R / 2 * Math.cos(a));
         let AstroidY = Math.round(midY + R / 2 * Math.sin(a));
@@ -230,9 +210,9 @@ function CreateMatrixAffinity(mass) {
     }
     return arr;
 }
-function CreateAstroidAffinity(mark, param = 'aquamarine') {
+function CreateAstroidAffinity(param = 'aquamarine') {
     return {
-        mark: mark = mark,
+        mark: mark = new Array(),
         param: param = param,
     }
 }
@@ -240,7 +220,7 @@ function AlgorithmAffinityPropagation(mass) {
     let S = CreateMatrixAffinity(mass);
     let R = matrixArray(mass.length, mass.length);
     let A = matrixArray(mass.length, mass.length);
-    let iter = 0, MaxIteration = 50, radious = 400;
+    let iter = 0, MaxIteration = 300, radious = 500;
     while (iter < MaxIteration) {
         for (let i = 0; i < mass.length; i++) {
             for (let k = 0; k < mass.length; k++) {
@@ -295,14 +275,22 @@ function AlgorithmAffinityPropagation(mass) {
                 MaxNumber = A[i][k] + R[i][k];
             }
         }
+        console.log(MaxNumber);
         for (let j = 0; j < massAstroid.length; j++) {
-            if (Math.abs(massAstroid[j].mark - MaxNumber) < radious) {
-                mass[i].astroid = mass[j]
-                CheckAffinity = true;
+            for (let k = 0; k < massAstroid[j].mark.length; k++) {
+                if (Math.abs(massAstroid[j].mark[k] - MaxNumber) < radious) {
+                    mass[i].astroid = massAstroid[j];
+                    massAstroid[j].mark.push(MaxNumber);
+                    
+                    CheckAffinity = true;
+                    j = massAstroid.length;
+                    break;
+                }
             }
         }
         if (!CheckAffinity) {
-            massAstroid.push(CreateAstroidAffinity(MaxNumber));
+            massAstroid.push(CreateAstroidAffinity());
+            massAstroid[massAstroid.length - 1].mark.push(MaxNumber);
             mass[i].astroid = massAstroid[massAstroid.length - 1];
         }
     }

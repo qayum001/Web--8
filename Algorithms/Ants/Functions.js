@@ -1,3 +1,5 @@
+let radTodeg = 180 / Math.PI;
+
 function wallMatrix(rows, columns) {//returns a matrix filled with Walls
     let arr = new Array();
     for(let i = 0; i < rows; i++) {
@@ -16,9 +18,13 @@ function AntSpawner(antCount, array){
 }
 
 function foodSpawner(foodCount, array, worldMatrix){
-    for(let i = 0; i < foodCount; i++){
-        array.push(new Food(new Position(rand(4, 996),rand(4, 996)), 2, 20));
-        worldMatrix[array[i].position.x][array[i].position.y] = array[i];
+    for(let i = 0; i < foodCount;){
+        let food = new Food(new Position(rand(4, 996),rand(4, 996)), 2, 20);
+        if(!(worldMatrix[food.position.x][food.position.y] instanceof Wall)){
+            array.push(food);            
+            worldMatrix[food.position.x][food.position.y] = food;
+            i++;
+        }
     }
 }
 
@@ -34,14 +40,15 @@ function inRange(num, left, right){
     return false;
 }
 
-function search(world, obj, array){
+function search(world, obj, arrayP, arrayF){
     let wayX = Math.ceil(obj.x);
     let wayY = Math.ceil(obj.y);
     for(let i = wayX - 2; i <= wayX + 2; i++){
         for(let j = wayY - 2; j <= wayY + 2; j++){
             if(world.objects[i][j] instanceof Food){
-                array.push(world.objects[i][j]);
-                //console.log(inSight);
+                arrayF.push(world.objects[i][j]);
+            }else if(world.objects[i][j] instanceof Pheromone){
+                arrayP.push(world.objects[i][j]);
             }
         }
     }

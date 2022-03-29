@@ -80,9 +80,9 @@ function Render(){
         ctx.arc(ants[i].position.x, ants[i].position.y, ants[i].radius, 0, Math.PI * 2, true);
         ctx.fill();
         ants[i] = ants[i].movement(world);
-        if(ants[i].PheramomeCount > 100){
+        if(ants[i].PheramoneCount > 100){
             ants[i].leavePheromone(world, Pheromones);
-            ants[i].PheramomeCount -= (ants[i].PheramomeCount * 0.01);
+            ants[i].PheramoneCount -= (ants[i].PheramoneCount * 0.01);
         }
         ants[i].satiety--;
         search(world, ants[i], objsInSight);

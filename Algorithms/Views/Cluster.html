@@ -23,6 +23,14 @@
                     <input type="number" id="astroidSetter" value="3"/>
                 </div>
             </div>
+            <div class="square">
+                <p>DBSCAN</p>
+                <p>density &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 radius</p>
+                <div class="size-inputs">
+                    <input type="number" id="mDBSCANsetter" value="4"/>
+                    <input type="number" id="eDBSCANsetter" value="10"/>
+                </div>
+            </div>
             <div class="node-btns">
                 <button class="node-make" onclick="RemoveNode()">Remove Node</button>
                 <button class="node-make" onclick="SetNode()">Set Node</button>
@@ -37,6 +45,9 @@
             <div class="start-btn">
                 <button id="launch" onclick="LaunchHierarchy()">Launch Hierarchy</button>
             </div>
+            <div class="start-btn">
+                <button id="launch" onclick="LaunchDBSCAN()">Launch DBSCAN</button>
+            </div>
             <div class="set-matrix-btn">
                 <button class="set-matrix-btns" onclick="Donut()">Donut</button>
                 <button class="set-matrix-btns" onclick="Square()">Square</button>
@@ -47,6 +58,11 @@
     </div>
     <div class="footer">
     </div>
-    <script src="../Code/Cluster.js"></script> 
+    <script src="../Cluster/Main.js"></script> 
+    <script src="../Cluster/Functions.js"></script> 
+    <script src="../Cluster/AlgorithmKmeans.js"></script> 
+    <script src="../Cluster/AlgorithmHierarchy.js"></script> 
+    <script src="../Cluster/AlgorithmAffinityPropagation.js"></script> 
+    <script src="../Cluster/AlgorithmDBSCAN.js"></script> 
 </body>
 </html>

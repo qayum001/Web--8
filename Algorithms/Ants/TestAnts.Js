@@ -10,59 +10,71 @@ class TestAnts extends BaseObject{
 
     movement(world) {
         let ArrayFeromon = new Array();
-        search(world, this.position, ArrayFeromon);
-
-        let a = 1, b = 2, Value, Max = 0, MaxIter;
-        let Sum = 0, Probability; 
-        for (let i = 0; i < ArrayFeromon.length; i++) {
-            if (this.target == 'food') {
-                Sum += Math.pow(ArrayFeromon[i].tofood, a) * Math.pow(Value, b);
-                if (Max < Math.pow(ArrayFeromon[i].tofood, a) * Math.pow(Value, b)) {
-                    Max = Math.pow(ArrayFeromon[i].tofood, a) * Math.pow(Value, b);
-                    MaxIter = i;
+        let foodsArray = new Array();
+        search(world, this.position, ArrayFeromon, foodsArray);
+        if(foodsArray.length > 0){
+            let A = Math.max(this.position.x, foodsArray[0].position.x) - Math.min(this.position.x, foodsArray[0].position.x);
+            let B = Math.max(this.position.y, foodsArray[0].position.y) - Math.min(this.position.y, foodsArray[0].position.y);
+            let C = Math.sqrt(Math.pow(A, 2) + Math.pow(B, 2));
+            if(C < 1.5){
+                
+                this.target = 'home';
+            }else{
+                let newAngle = Math.acos(A / C) * radTodeg;
+            }
+        }else{
+            let a = 1, b = 2, Value, Max = 0, MaxIter;
+            let Sum = 0, Probability;
+            for (let i = 0; i < ArrayFeromon.length; i++) {
+                if (this.target == 'food') {
+                    Sum += Math.pow(ArrayFeromon[i].tofood, a) * Math.pow(Value, b);
+                    if (Max < Math.pow(ArrayFeromon[i].tofood, a) * Math.pow(Value, b)) {
+                        Max = Math.pow(ArrayFeromon[i].tofood, a) * Math.pow(Value, b);
+                        MaxIter = i;
+                    }
                 }
+                else {
+                    Sum += Math.pow(ArrayFeromon[i].tohome, a) * Math.pow(Value, b);
+                    if (Math.pow(ArrayFeromon[i].tohome, a) * Math.pow(Value, b)) {
+                        Max = Math.pow(ArrayFeromon[i].tohome, a) * Math.pow(Value, b);
+                        MaxIter = i;
+                    }
+                }
+            }
+            if (this.target == 'food') {
+                Probability = Max / Sum;
             }
             else {
-                Sum += Math.pow(ArrayFeromon[i].tohome, a) * Math.pow(Value, b);
-                if (Math.pow(ArrayFeromon[i].tohome, a) * Math.pow(Value, b)) {
-                    Max = Math.pow(ArrayFeromon[i].tohome, a) * Math.pow(Value, b);
-                    MaxIter = i;
+                Probability = Max / Sum;
+            }
+            if (Math.random <= Probability) {
+                let newX = ArrayFeromon[MaxIter].position.x;
+                let newY = ArrayFeromon[MaxIter].position.y;
+                this.angle = GetNewAngle(this.position, ArrayFeromon[MaxIter].position);
+                let newAnt = new TestAnts(new Position(newX, newY), this.radius, this.vector, this.angle, this.target, this.satiety);
+                return newAnt;
+            }
+            else {
+                this.angle = (this.angle + rand(-7, 7)) % 360;
+                let direction = (Math.PI / 180) * this.angle;
+                let newX = this.position.x + (this.vector * Math.cos(direction));
+                let newY = this.position.y + (this.vector * Math.sin(direction));
+                if(world.objects[Math.ceil(newX)][Math.ceil(this.position.y)] instanceof Wall || (newX < this.radius + this.vector || newX > world.width - this.radius - this.vector)){
+                    this.angle = 180 - this.angle;
+                    direction = (Math.PI / 180) * this.angle;
+                    newX = this.position.x + (this.vector * Math.cos(direction));
                 }
+                if(world.objects[Math.ceil(this.position.x)][Math.ceil(newY)] instanceof Wall || (newY < this.radius + this.vector || newY > world.height - this.radius - this.vector)){
+                    this.angle = -this.angle;
+                    direction = (Math.PI / 180) * this.angle;
+                    newY = this.position.y + (this.vector * Math.sin(direction));
+                }
+                let newAnt = new TestAnts(new Position(newX, newY), this.radius, this.vector, this.angle, this.target, this.satiety);
+                return newAnt;
             }
-        }
-        if (this.target == 'food') {
-            Probability = Max / Sum;
-        }
-        else {
-            Probability = Max / Sum;
-        }
-        if (Math.random <= Probability) {
-            let newX = ArrayFeromon[MaxIter].position.x;
-            let newY = ArrayFeromon[MaxIter].position.y;
-            this.angle = GetNewAngle(this.position, ArrayFeromon[MaxIter].position);
-            let newAnt = new TestAnts(new Position(newX, newY), this.radius, this.vector, this.angle, this.target, this.satiety);
-            return newAnt;
-        }
-        else {
-            //console.log(world.objects);
-            this.angle = (this.angle + rand(-7, 7)) % 360;
-            let direction = (Math.PI / 180) * this.angle;
-            let newX = this.position.x + (this.vector * Math.cos(direction));
-            let newY = this.position.y + (this.vector * Math.sin(direction));
-            if(world.objects[Math.ceil(newX)][Math.ceil(this.position.y)] instanceof Wall || (newX < this.radius + this.vector || newX > world.width - this.radius - this.vector)){
-                this.angle = 180 - this.angle;
-                direction = (Math.PI / 180) * this.angle;
-                newX = this.position.x + (this.vector * Math.cos(direction));
-            }
-            if(world.objects[Math.ceil(this.position.x)][Math.ceil(newY)] instanceof Wall || (newY < this.radius + this.vector || newY > world.height - this.radius - this.vector)){
-                this.angle = -this.angle;
-                direction = (Math.PI / 180) * this.angle;
-                newY = this.position.y + (this.vector * Math.sin(direction));
-            }
-            let newAnt = new TestAnts(new Position(newX, newY), this.radius, this.vector, this.angle, this.target, this.satiety);
-            return newAnt;
         }
     }
+
     leavePheromone(world, pArray){
         let cX = Math.ceil(this.position.x);
         let cY = Math.ceil(this.position.y);
