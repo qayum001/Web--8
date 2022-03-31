@@ -55,19 +55,23 @@ function generateWorld(){
 
     worldView.src = canv.toDataURL();
 
-    AntSpawner(1300, ants);
+    AntSpawner(200, ants);
     foodSpawner(10, food, world.objects);
 }
 
 generateWorld();
 
 function Render(){
+    ctx.fillStyle = 'red';
     for(let i = 0; i < Pheromones.length; i++){
         Pheromones[i].count -= 10;
         if(Pheromones[i].count < 10){
             world.objects[Pheromones[i].position.x][Pheromones[i].position.y] = 0;
             Pheromones.splice(i, 1);
         }
+        ctx.beginPath();
+        ctx.arc(Pheromones[i].position.x, Pheromones[i].position.y, Pheromones[i].radius, 0, Math.PI * 2, true);
+        ctx.fill();
     }
     ctx.fillStyle = 'blue';
     for(let i = 0; i < ants.length; i++){
@@ -84,11 +88,13 @@ function Render(){
             ants[i].leavePheromone(world, Pheromones);
             ants[i].PheramoneCount -= (ants[i].PheramoneCount * 0.01);
         }
+        console.log(ants[i].satiety);
         ants[i].satiety--;
         search(world, ants[i], objsInSight);
     }
     ctx.fillStyle = 'green';
     for(let i = 0; i < food.length; i++){
+        //console.log(food[i].portion);
         if(food[i].portion <= 0){
             food.splice(i, 1);
             continue;

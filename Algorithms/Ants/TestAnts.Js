@@ -1,5 +1,5 @@
 class TestAnts extends BaseObject{
-    constructor(position, radius, vector, angle, target = 'food', satiety = 500){
+    constructor(position, radius, vector, angle, target = 'food', satiety = 2300){
         super(position, radius);
         this.radius = radius;
         this.vector = vector;
@@ -12,16 +12,25 @@ class TestAnts extends BaseObject{
         let ArrayFeromon = new Array();
         let foodsArray = new Array();
         search(world, this.position, ArrayFeromon, foodsArray);
-        if(foodsArray.length > 0){
+        if(foodsArray.length > 0 && this.target == 'food'){
             let A = Math.max(this.position.x, foodsArray[0].position.x) - Math.min(this.position.x, foodsArray[0].position.x);
             let B = Math.max(this.position.y, foodsArray[0].position.y) - Math.min(this.position.y, foodsArray[0].position.y);
             let C = Math.sqrt(Math.pow(A, 2) + Math.pow(B, 2));
-            if(C < 1.5){
-                
-                this.target = 'home';
+            let ArC = Math.max(Math.abs(this.position.x - foodsArray[0].position.x), Math.abs(this.position.y - foodsArray[0].position.y));
+            console.log(ArC);
+            let newAnt;
+            if(ArC <= 4){
+                let currentFood = world.objects[foodsArray[0].position.x][foodsArray[0].position.y];
+                //console.log(currentFood);
+                world.objects[foodsArray[0].position.x][foodsArray[0].position.y] = new Food(currentFood.position, currentFood.radius, currentFood.portion - 2);
+                let newSatiety = this.satiety + 2000;
+                //console.log(world.objects[foodsArray[0].position.x][foodsArray[0].position.y]);
+                newAnt = new TestAnts(this.position, this.radius, this.vector, -this.angle, 'home', newSatiety);
             }else{
-                let newAngle = Math.acos(A / C) * radTodeg;
+                let newAngle = Math.acos(A / C) * radToDeg;
+                newAnt = new TestAnts(this.position, this.radius, this.vector, newAngle, 'food', this.satiety);
             }
+            return newAnt;
         }else{
             let a = 1, b = 2, Value, Max = 0, MaxIter;
             let Sum = 0, Probability;

@@ -1,4 +1,4 @@
-let radTodeg = 180 / Math.PI;
+let radToDeg = 180 / Math.PI;
 
 function wallMatrix(rows, columns) {//returns a matrix filled with Walls
     let arr = new Array();
@@ -13,13 +13,13 @@ function wallMatrix(rows, columns) {//returns a matrix filled with Walls
 
 function AntSpawner(antCount, array){
     for(let i = 0; i < antCount; i++){
-        array.push(new TestAnts(colony.position, 1, 1, rand(0, 360), 'food', Number(rand(20000, 30000))));
+        array.push(new TestAnts(colony.position, 1, 1, rand(0, 360), 'food', Number(rand(3000, 4000))));
     }
 }
 
 function foodSpawner(foodCount, array, worldMatrix){
     for(let i = 0; i < foodCount;){
-        let food = new Food(new Position(rand(4, 996),rand(4, 996)), 2, 20);
+        let food = new Food(new Position(rand(4, 996),rand(4, 996)), 2, 10);
         if(!(worldMatrix[food.position.x][food.position.y] instanceof Wall)){
             array.push(food);            
             worldMatrix[food.position.x][food.position.y] = food;
@@ -43,8 +43,8 @@ function inRange(num, left, right){
 function search(world, obj, arrayP, arrayF){
     let wayX = Math.ceil(obj.x);
     let wayY = Math.ceil(obj.y);
-    for(let i = wayX - 2; i <= wayX + 2; i++){
-        for(let j = wayY - 2; j <= wayY + 2; j++){
+    for(let i = wayX - 3; i <= wayX + 3; i++){
+        for(let j = wayY - 3; j <= wayY + 3; j++){
             if(world.objects[i][j] instanceof Food){
                 arrayF.push(world.objects[i][j]);
             }else if(world.objects[i][j] instanceof Pheromone){

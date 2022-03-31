@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../Styles/Ants_Base.css">
+    <title>Ants_Base</title>
+</head>
+<body>    
+    <div class="header">
+        <a style="text-decoration:none" href="#">Home Page</a>
+    </div>
+    <div class="main-activity">
+        <div class="main-field">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="settings">
+            <div class="square">
+                <div class="size-inputs">
+                    <p>Current Lenght: </p><output type="number" id="widthSetter" value="70"></output>
+                    <p>Minimal Lenght: </p><output type="number" id="heightSetter" value="70"></output>
+                </div>
+            </div>
+            <div class="wall-btns">
+                <button class="wall-make" onclick="setNode()">Set node</button>
+                <button class="wall-make" onclick="removeNode()">Remove node</button>
+            </div>
+            <div class="start-btn">
+                <button class="globalBtns" onclick="Launch()">Launch</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+    </div>
+    <script src="../Ants_base/Functions.js"></script>
+    <script src="../Ants_base/Position.js"></script>
+    <script src="../Ants_base/Edge.js"></script>
+    <script src="../Ants_base/Node.js"></script>
+    <script src="../Ants_base/Algorithm.js"></script>
+    <script src="../Ants_base/launcher.js"></script>
+</body>
+</html>
