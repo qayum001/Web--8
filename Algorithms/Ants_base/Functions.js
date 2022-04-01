@@ -33,7 +33,6 @@ function chance(array = [], resultArr){//gets point's ways and returns chances
         }
         resultArr.push(a / P);
     }
-    resultArr.sort((a, b) => a - b);
 }
 
 function distance(node_1, node_2){

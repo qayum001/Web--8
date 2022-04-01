@@ -27,7 +27,7 @@ class Generation {
         }
 
         this.Individuals.sort((a, b) => a.Distance - b.Distance);
-        this.Individuals.splice(this.Population, this.Individuals.length - this.Population);
+        this.Exclusion();
         this.BestIndividual = this.Individuals[0];
     }
 
@@ -78,4 +78,16 @@ class Generation {
         return false;
     }
     
+    Exclusion() {
+        for (let i = 1; i < this.Individuals.length; i++) {
+            if (this.Individuals[i - 1].Distance == this.Individuals[i].Distance) {
+                this.Individuals.splice(i, 1);
+                i--;
+            }
+        }
+        if (this.Individuals.length - this.Population > 0) {
+            this.Individuals.splice(this.Population, this.Individuals.length - this.Population);
+        }
+    }
+
 }
