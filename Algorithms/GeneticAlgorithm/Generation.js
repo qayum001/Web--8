@@ -16,13 +16,13 @@ class Generation {
         this.BestIndividual = this.Individuals[0];
     }
 
-    NextGeneration(Matrix) {
+    NextGeneration() {
         for (let i = 0; i < this.Population; i++) {
             for (let j = 0; j < this.Population; j++) {
                 if (i == j) {
                     continue;
                 }
-                this.Individuals.push(this.Reproduction(this.Individuals[i], this.Individuals[j], Matrix));
+                this.Individuals.push(this.Reproduction2(this.Individuals[i], this.Individuals[j]));
             }
         }
 
@@ -31,7 +31,7 @@ class Generation {
         this.BestIndividual = this.Individuals[0];
     }
 
-    Reproduction(Individual1, Individual2, Matrix) {
+    Reproduction(Individual1, Individual2) {
         let PointGap = rand(1, this.len - 1);
         let CurrentIndividual = new Individual(this.len, this.Matrix);
 
@@ -64,7 +64,43 @@ class Generation {
             [CurrentIndividual.Genes[a], CurrentIndividual.Genes[b]] = [CurrentIndividual.Genes[b], CurrentIndividual.Genes[a]];
         }
 
-        CurrentIndividual.SetDistance(Matrix);
+        CurrentIndividual.SetDistance(this.Matrix);
+
+        return CurrentIndividual;
+    }
+
+    Reproduction2(Individual1, Individual2) {
+        let PointGap = Math.floor(Math.random() * (this.len));
+        let PointGapMax = Math.floor(Math.random() * (this.len - PointGap - 1) + PointGap + 1);
+        while (PointGapMax == PointGap) {
+            PointGapMax = Math.floor(Math.random() * (this.len - PointGap - 1) + PointGap + 1);
+        }
+        let CurrentIndividual = new Individual(this.len, this.Matrix);
+        let iter = PointGapMax - PointGap;
+
+        for (let i = PointGap; i < PointGapMax; i++) {
+            CurrentIndividual.Genes[i - PointGap] = Individual1.Genes[i];
+        }
+
+        for (let i = 0; i < this.len; i++) {
+            let CurrentGen = Individual2.Genes[i];
+            let check = true;
+
+            for (let j = 0; j < PointGapMax - PointGap; j++) {
+                if (CurrentIndividual.Genes[j] === CurrentGen) {
+                    check = false;
+                    break;
+                }
+            }
+
+            if (check) {
+                CurrentIndividual.Genes[iter] = CurrentGen;
+                PointGapMax++;
+                iter++;
+            }
+        }
+
+        CurrentIndividual.SetDistance(this.Matrix);
 
         return CurrentIndividual;
     }
@@ -80,7 +116,7 @@ class Generation {
     
     Exclusion() {
         for (let i = 1; i < this.Individuals.length; i++) {
-            if (this.Individuals[i - 1].Distance == this.Individuals[i].Distance) {
+            if (Math.abs(this.Individuals[i - 1].Distance - this.Individuals[i].Distance) < 0.000000001) {
                 this.Individuals.splice(i, 1);
                 i--;
             }

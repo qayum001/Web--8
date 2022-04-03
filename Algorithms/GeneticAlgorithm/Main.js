@@ -15,6 +15,7 @@ let mass = new Array();
 
 let SetFlag = false;
 let RemoveFlag = false;
+let ClearFlag = false;
 
 let correctX, correctY, matrixX, matrixY;
 
@@ -41,6 +42,8 @@ function GetIndexNode(point) {
 function ClearNodes() {
     mass = new Array();
     ctx.clearRect(0, 0, canv.width, canv.height);
+    Count = 0;
+    ClearFlag = true;
 }
 
 canv.onclick = function(event){    

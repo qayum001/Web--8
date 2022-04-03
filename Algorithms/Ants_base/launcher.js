@@ -56,27 +56,27 @@ function Launch(){
 }
 
 function Render(){
-    ctx.clearRect(0, 0, 1600, 1000);
-    let edgesToRender = ants(Nodes);
-    //console.log(edgesToRender);
-    ctx.strokeStyle = 'rgb(217, 0, 55)';
-    for(let i = 0; i < edgesToRender.length; i++){
-        ctx.beginPath();
-        ctx.moveTo(edgesToRender[i].startNode.position.x, edgesToRender[i].startNode.position.y);
-        ctx.lineTo(edgesToRender[i].endNode.position.x, edgesToRender[i].endNode.position.y);
-        ctx.stroke();
+    if(Nodes.length > 0){
+        ctx.clearRect(0, 0, 1600, 1000);
+        let edgesToRender = ants(Nodes);
+        console.log(edgesToRender);
+        ctx.strokeStyle = 'rgb(217, 0, 55)';
+        for(let i = 0; i < edgesToRender.length; i++){
+            ctx.beginPath();
+            ctx.moveTo(edgesToRender[i].startNode.position.x, edgesToRender[i].startNode.position.y);
+            ctx.lineTo(edgesToRender[i].endNode.position.x, edgesToRender[i].endNode.position.y);
+            ctx.stroke();
+        }
+        ctx.fillStyle = 'rgb(30, 0, 255)';
+        for(let i = 0; i < Nodes.length; i++){
+            ctx.beginPath();
+            ctx.arc(Nodes[i].position.x, Nodes[i].position.y, 8, 0, Math.PI * 2, true);
+            ctx.fill();
+        }
     }
-    ctx.fillStyle = 'rgb(30, 0, 255)';
-    for(let i = 0; i < Nodes.length; i++){
-        ctx.beginPath();
-        ctx.arc(Nodes[i].position.x, Nodes[i].position.y, 8, 0, Math.PI * 2, true);
-        ctx.fill();
-    }
-    
     if(launched){
         window.requestAnimationFrame(Render);
     }
-    
 }
 //window.requestAnimationFrame(Render);
 setInterval("Render()", 500);

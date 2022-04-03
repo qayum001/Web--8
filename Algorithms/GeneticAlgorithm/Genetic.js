@@ -13,37 +13,36 @@ function CreateMatrixAdjacency(mass) {
 }
 
 let BestIndividualToRenderALL = new Array();
+let Matrix;
+let CurrentGeneration;
+let Count = 0;
+let MinimalDistance;
+let BestIndividualToRender
 
 function AlgorithmGenetic(mass, Generations, Population, Mutation) {
-    let Matrix = CreateMatrixAdjacency(mass);
-    let CurrentGeneration = new Generation(mass, Matrix, Population, Mutation);
+    Matrix = CreateMatrixAdjacency(mass);
+    CurrentGeneration = new Generation(mass, Matrix, Population, Mutation);
+    MinimalDistance = CurrentGeneration.BestIndividual.Distance + 0;
+    Count = 1;
     
-    for (let i = 0; i < mass.length; i++) {
-        BestIndividualToRenderALL.push(CurrentGeneration.BestIndividual.Genes[i]);
-    }
-    
-    let MinimalDistance = CurrentGeneration.BestIndividual.Distance + 0;
-    let Count = 0;
-    while (Count != Generations) {
-        CurrentGeneration.NextGeneration(Matrix);
-
-        if (MinimalDistance > CurrentGeneration.BestIndividual.Distance) {
-            MinimalDistance = CurrentGeneration.BestIndividual.Distance + 0;
-            Count = 0;
-            for (let i = 0; i < mass.length; i++) {
-                BestIndividualToRenderALL.push(CurrentGeneration.BestIndividual.Genes[i]);
-            }
-        }
-        Count++;
-    }
-    document.getElementById('MinimalLength').textContent = Math.round(MinimalDistance);
     Render();
 }
 
 function Render() {
-    ctx.clearRect(0, 0, canv.width, canv.height);
+    if (Count > 0 && typeof(CurrentGeneration) != 'undefined') {
+        for (let i = 0; i < 17; i++) {
+            document.getElementById('MinimalLength').textContent = Math.round(CurrentGeneration.BestIndividual.Distance);
+            document.getElementById('Generations').textContent = Count;
+            CurrentGeneration.NextGeneration();
+            Count++;
+        }
+    }
+    
 
-    let BestIndividualToRender = BestIndividualToRenderALL.splice(0, mass.length);
+    if (Count > 0 && typeof(CurrentGeneration) != 'undefined') {
+        BestIndividualToRender = CurrentGeneration.BestIndividual.Genes.slice(0, mass.length);
+    }
+    ctx.clearRect(0, 0, canv.width, canv.height);
 
     ctx.fillStyle = 'rgb(37, 0, 161)';
 
@@ -56,7 +55,7 @@ function Render() {
     ctx.lineWidth = 4;
     ctx.strokeStyle = 'blue';
     
-    for (let i = 0; i < BestIndividualToRender.length; i++) {
+    for (let i = 0; Count != 0 && Count > 0 && typeof(BestIndividualToRender) != 'undefined' && i < BestIndividualToRender.length; i++) {
         if (i == 0) {
             ctx.moveTo(mass[BestIndividualToRender[0]].x * pixelSize, mass[BestIndividualToRender[0]].y * pixelSize);
         }
@@ -67,8 +66,15 @@ function Render() {
     }
 
     ctx.stroke();
-
-    if (BestIndividualToRenderALL.length > 0) {
+    if (ClearFlag) {
+        Count = 0;
+        ClearFlag = false;
+        Matrix = CreateMatrixAdjacency(mass);
+        CurrentGeneration = new Generation(mass, Matrix, Population, Mutation);
+        BestIndividualToRender = CurrentGeneration.BestIndividual.Genes.slice(0, mass.length);
+        ctx.clearRect(0, 0, canv.width, canv.height);
+    }
+    if (Count < Generations && Count > 0) {
         window.requestAnimationFrame(Render);
     }
 }
