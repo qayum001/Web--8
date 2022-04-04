@@ -4,5 +4,6 @@ class Edge{
         this.endNode = endNode;
         this.len = len;
         this.pCount = pCount;
+        this.edited = true;
     }
 }

@@ -30,7 +30,7 @@ function AlgorithmGenetic(mass, Generations, Population, Mutation) {
 
 function Render() {
     if (Count > 0 && typeof(CurrentGeneration) != 'undefined') {
-        for (let i = 0; i < 17; i++) {
+        for (let i = 0; i < 1; i++) {
             document.getElementById('MinimalLength').textContent = Math.round(CurrentGeneration.BestIndividual.Distance);
             document.getElementById('Generations').textContent = Count;
             CurrentGeneration.NextGeneration();

@@ -94,7 +94,6 @@ function GetNeighbours(Node, finish, mass) {
 
 function CheckPathLengthFromStart(node, openSet, finish) {
     for (let i = 0; i < openSet.length; i++) {
-        //console.log('CheckPathLengthFromStart for');
         if (CheckEquals(node.Position, openSet[i].Position)) {
             if (node.PathLengthFromStart < openSet[i].PathLengthFromStart) {
                 openSet[i].CameFrom = node;
@@ -108,13 +107,11 @@ function CheckPathLengthFromStart(node, openSet, finish) {
 function PopMinimalFullPathLength(openSet) {//Нахождение самой выгодной вершины
     node = openSet[0];
     for (let i = 1; i < openSet.length; i++) {
-        //console.log('PopMinimalFullPathLength 1 for');
         if (node.EstimateFullPathLength > openSet[i].EstimateFullPathLength) {
             node = openSet[i];
         }
     }
     for (let i = 0; i < openSet.length; i++) {
-        //console.log('PopMinimalFullPathLength 2 for');
         if (node === openSet[i]) {
             openSet.splice(i, 1);
         }
@@ -126,7 +123,6 @@ function GetPathForNode(pathNode) {//Восстановление пути от 
     let result = new Array();
     let currentNode = pathNode;
     while (currentNode != null) {
-        //console.log('GetPathForNode while');
         result.push(currentNode.Position);
         pointToDrowPath.push(pointDrow(currentNode.Position.x, currentNode.Position.y, 3));//Маршрут для отрисовки
         currentNode = currentNode.CameFrom;
@@ -151,8 +147,6 @@ function GetPathForCurrentNode(pathNode, pointToDrowPath) {//Восстанов�
     }
 }
 function FindPath(mass, start, finish) {//Основная функция A* 
-    //MatrixClear(mass);
-    //console.log('lenght: ' + mass.length + '\n' + 'start x: ' + start.x + ' start y: ' + start.y + '\n' + 'finish x: ' + finish.x + ' finish y: ' + finish.y)
     let closedSet = new Array();
     let openSet = new Array();
     startNode = PathNode(start, 0, null, GetHeuristicPathLength(start, finish));
@@ -161,7 +155,6 @@ function FindPath(mass, start, finish) {//Основная функция A*
     console.log()
     while(openSet.length > 0) {
         let currentNode = PopMinimalFullPathLength(openSet);
-        //console.log('FindPath while');
         if (CheckEquals(currentNode.Position, finish)) {
             return GetPathForNode(currentNode);
         }
@@ -175,7 +168,6 @@ function FindPath(mass, start, finish) {//Основная функция A*
         let Neighbours = GetNeighbours(currentNode, finish, mass);
 
         for (let i = 0; i < Neighbours.length; i++) {
-            //console.log('FindPath for');
             let currentPathLengthFromStart = currentNode.PathLengthFromStart + GetDistanceBetweenNeighbours(currentNode.Position, Neighbours[i].Position);
 
             if (isUsed(closedSet, Neighbours[i])) {
@@ -203,7 +195,6 @@ pointsToClear = pointToDrowPath;
 function printPoint(){
     let currentPoints = pointToDrowPath.splice(0, Math.ceil(pointToDrowPath.length * 0.0037));
     for(let i = 0; i < currentPoints.length; i++){
-        //console.log('printPoint for');
 
         if(currentPoints[i].param == 1){
             ctx.fillStyle = 'green';
@@ -223,5 +214,3 @@ function printPoint(){
         window.requestAnimationFrame(printPoint);
     }
 }
-
-//Последовательность вершин для прорисовки анимации работы алгоритма

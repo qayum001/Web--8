@@ -1,39 +1,49 @@
-function ants(points = []){
-
-    //let fullLength = 0;
-    //let minLenght = 0;
-    let queue = new Array();
-    //cloneArray(points, queue);
-    queue.push(points[0]);
-    
-    let edges = new Array();
-    edges.length = points.length;
-    for(let i = 0; i < edges.length; i++){
-        edges[i] = new Way();
-    }
-    let edgesToRender = new Array();
-
-    while(queue.length > 0){
-        let currentPoint = queue.splice(0, 1);
-        let randFloat = Math.random();
-        let chances = new Array();
-        chance(currentPoint[0].ways, chances);
-        let curP = chances[0];
-        for(let i = 1; i < chances.length; i++){
-            if(randFloat <= curP){
-                let p = currentPoint[0].ways[i - 1].endNode;
-                let newWays = new Array();
-                for(let j = 0; j < p.ways.length; j++){
-                    //if(p.ways[j].endNode.index == currentPoint[0].index) continue;
-                    newWays.push(new Edge(p.ways[j].startNode, p.ways[j].endNode, p.ways[j].len, p.ways[j].pCount));
-                    edgesToRender.push(newWays[newWays.length - 1]);
-                }
-                queue.push(new Point(p.position, p.index, newWays))
-                edges[currentPoint[0].index].Edges.push(currentPoint[0].ways[i - 1]);
-                break;
-            }
-            curP += chances[i];
+function ants2(points = [], minWayArray = []) {
+    let PointsToRender = new Array();
+    let Distances = new Array();// содержит объект типа Way
+    for (let i = 0; i < points.length; i++) {
+        let visited = new Array();
+        for (let j = 0; j < points.length; j++) {
+            visited.push(false);
         }
+        let iter = Math.round(Math.random() * (points.length - 1));
+        let iterLast = iter + 0;
+        let curDis = new Array();// сохраняет длину пройденного пути 
+        let curWay = new Array();// сохраняет вершины по которым прошёл муравей
+        curDis.push(0);
+        iter = dfs(points, visited, iter, 0, PointsToRender, curDis, curWay);
+        PointsToRender.push(points[iterLast]);
+        curWay.push(points[iterLast]);
+        curDis[0] += distance(points[iterLast].position, points[iter].position);
+        Distances.push(new Way(curDis[0], curWay));
     }
-    return edgesToRender;
+    GlobalMinimalWay = PheromoneRegulator(Distances, points);
+    return PointsToRender;
+}
+function dfs(points, visited, iter, count, PointsToRender, curDis, curWay) {
+    PointsToRender.push(points[iter]);
+    curWay.push(points[iter]);
+    visited[iter] = true;
+    count++;
+
+    if (count == visited.length) {
+        return iter;
+    }
+
+    let chances = new Array();
+    chanceDFS(points[iter].ways, chances, visited);
+
+    let Probability = Math.random();
+    let currentProbability = 0;
+    let index = 0;
+    for (let i = 0; i < visited.length; i++) {
+        if (visited[i]) continue;
+        
+        currentProbability += chances[index];
+        if (Probability <= currentProbability) {
+            curDis[0] += distance(points[i].position, points[iter].position);
+            return dfs(points, visited, i, count, PointsToRender, curDis, curWay);
+        }
+        index++;
+    }
 }

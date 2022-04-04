@@ -1,11 +1,6 @@
-class Way{
-    constructor(){
-        this.dis = 0;
-        this.Edges = new Array();
-    }
-    setDis(){
-        for(let i = 0; i < this.Edges.length; i++){
-            this.dis += this.Edges[i].len;
-        }
+class Way{// содержит вершины по которым был произведён путить и длину этого пути
+    constructor(dis = 0, Points = new Array()){
+        this.dis = dis;
+        this.Points = Points;
     }
 }

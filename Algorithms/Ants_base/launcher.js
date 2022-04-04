@@ -8,6 +8,8 @@ let defoultPcount = 1;
 
 let Nodes = new Array();
 
+let GlobalMinimalWay = new Array();// содержит наикратчайший путь
+
 let index = 0;
 
 let setNodeFlag = false;
@@ -29,24 +31,19 @@ canv.onclick = function(event){
     let y = event.offsetY;
 
     if(setNodeFlag){
-        Nodes.push(new Point(new Position(x, y), index, new Array(), new Array()));
-        ctx.fillStyle = 'rgb(30, 0, 255)';
+        Nodes.push(new Point(new Position(x, y), index, new Array()));
+        ctx.fillStyle = 'rgb(255, 0, 89)';
         for(let i = 0; i < Nodes.length; i++){
             let newWays = new Array();
-                ctx.beginPath();
-                ctx.arc(Nodes[i].position.x, Nodes[i].position.y, 8, 0, Math.PI * 2, true);
-                ctx.fill();
+            ctx.beginPath();
+            ctx.arc(Nodes[i].position.x, Nodes[i].position.y, 8, 0, Math.PI * 2, true);
+            ctx.fill();
             for(let j = 0; j < Nodes.length; j++){
-                if(i == j) continue;
                 newWays.push(new Edge(Nodes[i], Nodes[j], distance(Nodes[i].position, Nodes[j].position), defoultPcount));
-
             }
             Nodes[i].ways = newWays;
         }
         index++;
-    }
-    if(removeNodeFlag){
-        
     }
 }
 
@@ -57,17 +54,27 @@ function Launch(){
 
 function Render(){
     if(Nodes.length > 0){
+        if(removeNodeFlag){
+            Nodes.splice(0, Nodes.length);
+            launched = false;
+        }
         ctx.clearRect(0, 0, 1600, 1000);
-        let edgesToRender = ants(Nodes);
-        console.log(edgesToRender);
+        let PointsToRender = ants2(Nodes, GlobalMinimalWay);
         ctx.strokeStyle = 'rgb(217, 0, 55)';
-        for(let i = 0; i < edgesToRender.length; i++){
+        for(let i = 0; i < PointsToRender.length - 1; i++){
             ctx.beginPath();
-            ctx.moveTo(edgesToRender[i].startNode.position.x, edgesToRender[i].startNode.position.y);
-            ctx.lineTo(edgesToRender[i].endNode.position.x, edgesToRender[i].endNode.position.y);
+            ctx.moveTo(PointsToRender[i].position.x, PointsToRender[i].position.y);
+            ctx.lineTo(PointsToRender[i + 1].position.x, PointsToRender[i + 1].position.y);
             ctx.stroke();
         }
-        ctx.fillStyle = 'rgb(30, 0, 255)';
+        ctx.strokeStyle = 'rgb(111, 255, 0)';
+        for(let i = 0; i < GlobalMinimalWay.length - 1; i++){
+            ctx.beginPath();
+            ctx.moveTo(GlobalMinimalWay[i].position.x, GlobalMinimalWay[i].position.y);
+            ctx.lineTo(GlobalMinimalWay[i + 1].position.x, GlobalMinimalWay[i + 1].position.y);
+            ctx.stroke();
+        }
+        ctx.fillStyle = 'rgb(255, 0, 89)';
         for(let i = 0; i < Nodes.length; i++){
             ctx.beginPath();
             ctx.arc(Nodes[i].position.x, Nodes[i].position.y, 8, 0, Math.PI * 2, true);
@@ -78,5 +85,5 @@ function Render(){
         window.requestAnimationFrame(Render);
     }
 }
-//window.requestAnimationFrame(Render);
-setInterval("Render()", 500);
+window.requestAnimationFrame(Render);
+//setInterval("console.log(Nodes)",1000);
