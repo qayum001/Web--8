@@ -5,7 +5,7 @@ let GlobalMinWay = Infinity;
 let ALPHA = 1;
 let BETA = 1;
 
-let leavingPheramoneCount = 0.65;
+let leavingPheramoneCount = 0.2;
 
 let M = 1;
 let Q = 1; // константа на которую делится длина пути чтобы оставить феромон
@@ -104,11 +104,7 @@ function PheromoneRegulator(Ways, Points){//ways - массив объектов
                 for(let n = 0; n < Points[k].ways.length; n++){
                     let currentEdge = Points[k].ways[n];
                     if((currentEdge.startNode.index == sPIndex && currentEdge.endNode.index == ePIndex) || (currentEdge.endNode.index == sPIndex && currentEdge.startNode.index == ePIndex)){
-                        if(Ways[k].dis < GlobalMinWay){
-                            Points[k].ways[n].pCount += (Q / Ways[i].dis + 1);
-                        }else{
-                            Points[k].ways[n].pCount += (Q / Ways[i].dis);
-                        }
+                        Points[k].ways[n].pCount += (Q / Ways[i].dis);
                     }
                 }
             }
