@@ -110,5 +110,6 @@ function PheromoneRegulator(Ways, Points){//ways - массив объектов
             }
         }
     }
+    GlobalMinWay = Ways[minDisIndex].dis;
     return Ways[minDisIndex].Points;
 }

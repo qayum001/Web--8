@@ -11,11 +11,11 @@ ctx.fillRect(0, 0, 700, 700);
 downScaleCanv.width = 28;
 downScaleCanv.height = 28;
 
-let radius = 20;
+let radius = 25;
 
-console.log(InputLayer);
-console.log(HiddenLAyer);
-console.log(OutputLayer);
+// console.log(InputLayer);
+// console.log(HiddenLAyer);
+// console.log(OutputLayer);
 
 let drawFlag = false;
 let EraseFlag = false;
@@ -47,7 +47,7 @@ canv.onmouseup = function(){
 
 let neuralNetwork = new NeuralNetwork();
 
-console.log(neuralNetwork);
+// console.log(neuralNetwork);
 
 canv.onmousemove = function(event){
     let x = event.offsetX;

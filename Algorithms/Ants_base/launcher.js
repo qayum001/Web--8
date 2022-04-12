@@ -49,15 +49,20 @@ canv.onclick = function(event){
 
 function Launch(){
     launched = true;
+    Render();
+}
+
+function Refresh(){
     for(let i = 0; i < Nodes.length; i++){
         for(let j = 0; j < Nodes[i].ways.length; j++){
             Nodes[i].ways[j].pCount = defoultPcount;
         }
-    }Render();
+    }
 }
 
 function Render(){
     if(Nodes.length > 0){
+        document.getElementById('minLength').textContent = "Current Minimal Length: " + Math.ceil(GlobalMinWay);
         if(removeNodeFlag){
             Nodes.splice(0, Nodes.length);
             launched = false;
