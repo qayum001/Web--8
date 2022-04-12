@@ -14,17 +14,27 @@
     </div>
     <div class="main-activity">
         <div class="main-field">
-            <canvas id="canvas"></canvas>
-        </div>
-        <div class="settings">
+            <div>
+                <canvas id="canvas"></canvas>
+                <canvas id="downScale"></canvas>
+            </div>
             <div class="brush_btns">
-                <button class="brush" onclick="setNode()">Drow</button>
-                <button class="brush" onclick="removeNode()">Clear</button>
+                <button class="brush" onclick="Draw()">Draw</button>
+                <button class="brush" onclick="Erase()">Erase</button>
+                <button class="brush" onclick="Clear()">Clear</button>
+                <output class="brush" id="output"onclick="Clear()">0</output>
             </div>
         </div>
     </div>
     <div class="footer">
     </div>
+    <script src="../AI/InputLayerWeights.js"></script>
+    <script src="../AI/HIddenLayerWeights.js"></script>
+    <script src="../AI/OutputLayerWeights.js"></script>
+    <script src="../AI/functions.js"></script>
+    <script src="../AI/Neuron.js"></script>
+    <script src="../AI/Layer.js"></script>
+    <script src="../AI/NeuralNetwork.js"></script>
     <script src="../AI/Main.js"></script>
 </body>
 </html>
