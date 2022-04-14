@@ -38,21 +38,24 @@ class Tree {
     }
 
     DefineSize() {
-        this.HeightNode = 800/this.MaxRows/2;
-        this.WidthNode = 1200/this.MaxColumns/2;
+        this.HeightNode = 800 / this.MaxRows / 2 * Scale;
+        this.WidthNode = 1200 / this.MaxColumns / 2 * Scale;
     }
 
     PrintTree() {
         let CurArray = new Array();
         CurArray.push(mass[0]);
 
-        let CurY = 200 / (this.MaxRows + 1), StepY = 200 / (this.MaxRows + 1) + this.HeightNode;
+        let CurY = (200 / (this.MaxRows + 1) + moveY) * Scale,
+        StepY = (200 / (this.MaxRows + 1) + this.HeightNode) * Scale;
         
         this.PrintRows(CurArray, CurY, StepY);
 
         this.PrintArrowTree();
 
         this.PrintRows(CurArray, CurY, StepY);
+
+
 
         // for (let i = 0; i < this.mass.length; i++) {
         //     ctx.fillStyle = 'red';
@@ -73,7 +76,8 @@ class Tree {
             }
         }
 
-        let CurX = 400 / (CurArray.length + 1) + 1200 / (CurArray.length + 1), StepX = 400 / (CurArray.length + 1) + 1200 / (CurArray.length + 1);
+        let CurX = (400 / (CurArray.length + 1) + 1200 / (CurArray.length + 1) + moveX) * Scale,
+        StepX = (400 / (CurArray.length + 1) + 1200 / (CurArray.length + 1)) * Scale;
         CurY += StepY;
         
         for (let i = 0; i < CurArray.length; i++) {
@@ -98,7 +102,7 @@ class Tree {
         ctx.rect(X, Y, this.WidthNode, this.HeightNode);
         ctx.closePath();
 
-        ctx.strokeStyle = 'aquamarine';
+        ctx.strokeStyle = '#00a6ff';
         ctx.lineWidth = 5;
         ctx.fillStyle = ColorNode;
         ctx.stroke();
@@ -106,10 +110,8 @@ class Tree {
 
         ctx.fillStyle = "#000";
         ctx.strokeStyle = "#F00";
-        ctx.font = "italic 20pt Arial";
-        ctx.fillText(CurrentNode.Name, X, Y + 25);
-
-
+        ctx.font = "italic " + Scale * 20 + "pt Arial";
+        ctx.fillText(CurrentNode.Name, X, Y + this.HeightNode / 2 + Scale * 7);
     }
 
     PrintArrowTree() {
@@ -146,9 +148,9 @@ class Tree {
 
         ctx.fillStyle = "#7300ff";
         ctx.strokeStyle = "#000";
-        ctx.font = "italic 15pt Arial";
+        ctx.font = "italic " + Scale * 15 + "pt Arial";
         
-        ctx.fillText(Node1.ChildName[index], ((Node1.Position.x + this.WidthNode / 2) - ((Node1.Position.x + this.WidthNode / 2) - (Node2.Position.x + this.WidthNode / 2)) / 2) - 5 * Node1.ChildName[index].length, (Node1.Position.y + this.HeightNode) + ((Node2.Position.y) - (Node1.Position.y + this.HeightNode)) / 2);
+        ctx.fillText(Node1.ChildName[index], ((Node1.Position.x + this.WidthNode / 2) - ((Node1.Position.x + this.WidthNode / 2) - (Node2.Position.x + this.WidthNode / 2)) / 2) - Scale * 10 * Node1.ChildName[index].length, (Node1.Position.y + this.HeightNode) + ((Node2.Position.y) - (Node1.Position.y + this.HeightNode)) / 2);
     }
 
 }

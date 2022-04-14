@@ -17,6 +17,10 @@ let GlobalCurrentTree;
 let massParam;
 let GlobalCurrentAnswer;
 
+let moveX = 0;
+let moveY = 0;
+
+let Scale = 1, maxScale = 3, minScale = 0.5, stepScale = 0.1;
 
 document.getElementById('TreeSettings').addEventListener('keyup', function() {
     TREE_CSV = document.getElementById('TreeSettings').value;
@@ -26,8 +30,31 @@ document.getElementById('InputParams').addEventListener('keyup', function() {
     ANSW_CSV = document.getElementById('InputParams').value;
 }, false);
 
+canv.onmousedown = () =>{
+    canv.onmousemove = (e) =>{
+        moveX += e.movementX;
+        moveY += e.movementY;
+        RenderTree();
+    }
+}
+canv.onmouseup=()=>{
+    canv.onmousemove=null;
+}
+
+canv.onwheel = (e) =>{
+    console.log(e);
+    if(e.wheelDelta > 0 && maxScale >= Scale + stepScale){
+        Scale += stepScale;
+    }
+    if(e.wheelDelta < 0 && minScale <= Scale - stepScale){
+        Scale -= stepScale;
+    }
+    RenderTree();
+}
+
 function CreateTree() {
     ctx.clearRect(0, 0, canv.width, canv.height);
+
     mass = new Array();
     massData = new Array();
     massParam = new Array();
@@ -45,9 +72,12 @@ function CreateTree() {
 
     GlobalCurrentTree.PrintTree();
 
-    console.log(GlobalCurrentTree);
+    //console.log(GlobalCurrentTree);
 }
 
+function RenderTree() {
+    CreateTree();
+}
 function Launch() {
     GlobalCurrentAnswer = Papa.parse(ANSW_CSV).data[0];
 

@@ -138,7 +138,7 @@ function SetNode(mass, massData, massParam, massY, length, lengthY, used, IndexP
         used[MaxIndex] = true;
         if (IndexParent != null) {
             mass[IndexParent].ChildIndex.push(mass.length);
-            mass.push(new TLeaf(globalMassLeafParam[0]));
+            mass.push(new TLeaf(globalMassLeafParam[globalMassLeafParam.length - 1]));
         }
         return null;
     }
