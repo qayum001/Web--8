@@ -22,7 +22,7 @@ class Tree {
         for (let i = 0; i < CurArray.length; i++) {
             if (CurArray[i].ChildIndex != null) {
                 for (let j = 0; j < CurArray[i].ChildIndex.length; j++) {
-                    NextArray.push(mass[CurArray[i].ChildIndex[j] - 1]);
+                    NextArray.push(mass[CurArray[i].ChildIndex[j]]);
                 }
             }
         }
@@ -53,6 +53,13 @@ class Tree {
         this.PrintArrowTree();
 
         this.PrintRows(CurArray, CurY, StepY);
+
+        // for (let i = 0; i < this.mass.length; i++) {
+        //     ctx.fillStyle = 'red';
+        //     ctx.beginPath();
+        //     ctx.arc(mass[i].Position.x, mass[i].Position.y, 10, 0, Math.PI * 2, true);
+        //     ctx.stroke();
+        // }
     }
     
     PrintRows(CurArray, CurY, StepY) {
@@ -61,7 +68,7 @@ class Tree {
         for (let i = 0; i < CurArray.length; i++) {
             if (CurArray[i].ChildIndex != null) {
                 for (let j = 0; j < CurArray[i].ChildIndex.length; j++) {
-                    NextArray.push(mass[CurArray[i].ChildIndex[j] - 1]);
+                    NextArray.push(mass[CurArray[i].ChildIndex[j]]);
                 }
             }
         }
@@ -102,9 +109,7 @@ class Tree {
         ctx.font = "italic 20pt Arial";
         ctx.fillText(CurrentNode.Name, X, Y + 25);
 
-        if (CurrentNode instanceof TNode) {
-            ctx.fillText(CurrentNode.Condition, X, Y + this.HeightNode / 2 + 25);
-        }
+
     }
 
     PrintArrowTree() {
@@ -118,9 +123,10 @@ class Tree {
 
         for (let i = 0; i < CurArray.length; i++) {
             if (CurArray[i].ChildIndex != null) {
+                
                 for (let j = 0; j < CurArray[i].ChildIndex.length; j++) {
-                    NextArray.push(mass[CurArray[i].ChildIndex[j] - 1]);
-                    this.PrintArrowNode(CurArray[i], mass[CurArray[i].ChildIndex[j] - 1]);
+                    NextArray.push(mass[CurArray[i].ChildIndex[j]]);
+                    this.PrintArrowNode(CurArray[i], mass[CurArray[i].ChildIndex[j]], j);
                 }
             }
         }
@@ -130,13 +136,19 @@ class Tree {
         }
     }
 
-    PrintArrowNode(Node1, Node2) {
-        ctx.strokeStyle = 'aquamarine';
+    PrintArrowNode(Node1, Node2, index) {
+        ctx.strokeStyle = '#00257d';
         ctx.beginPath();
         ctx.moveTo(Node1.Position.x + this.WidthNode / 2, Node1.Position.y + this.HeightNode);
         ctx.lineTo(Node2.Position.x + this.WidthNode / 2, Node2.Position.y);
         ctx.closePath();
         ctx.stroke();
+
+        ctx.fillStyle = "#7300ff";
+        ctx.strokeStyle = "#000";
+        ctx.font = "italic 15pt Arial";
+        
+        ctx.fillText(Node1.ChildName[index], ((Node1.Position.x + this.WidthNode / 2) - ((Node1.Position.x + this.WidthNode / 2) - (Node2.Position.x + this.WidthNode / 2)) / 2) - 5 * Node1.ChildName[index].length, (Node1.Position.y + this.HeightNode) + ((Node2.Position.y) - (Node1.Position.y + this.HeightNode)) / 2);
     }
 
 }

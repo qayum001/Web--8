@@ -17,32 +17,17 @@
             <canvas id="matrix"></canvas>
         </div>
         <div class="settings">
-            <p>Format csv-text</p>
-            <div class="square">
-                <p>
-                    Format csv-file:
-
-                    1)Index;Name;Var1;Value1;Operator;Var2;Value2;NodeIndexs
-                    Index - number from 1 to infinity
-                    Name - name node of tree
-                    Var - name variable (can be None)
-                    Value - can be string or integer (can be None)
-                    Operator - < or <= or > or >= or ==
-                    NodeIndexs - Child Nodes format (2_3_11) (can be None)
-                    2)Var1;Value1;Var2;Number2;VarValue2;Next...
-                    Var1 - number 1 or 2 (can be None)
-                    Value1 - value (can be None)
-                </p>
-            </div>
             <p>Your csv-text for Create Tree</p>
             <div class="square">
-                <textarea id="TreeSettings" rows="11" cols="30" spellcheck="false">1;check 1;kek;1;<;cheb;2;2;3
-2;check 2;lol;None;>;kek;None;4;5
-3;check 3;cheb;None;<;lol;None;6;7
-4;check 4;lol;None;>;kek;None
-5;check 5;cheb;None;>;lol;None
-6;check 6;lol;None;<;kek;None
-7;check 7;cheb;None;>;lol;None</textarea>
+                <textarea id="TreeSettings" rows="11" cols="30" spellcheck="false">Enemy;Play;Leader;Rain;Win
+Up;Home;On place;Yes;No
+Up;Home;On place;No;Yes
+Up;Home;Skip;No;No
+Down;Home;Skip;No;Yes
+Down;In guest;Skip;No;No
+Down;Home;Skip;Yes;Yes
+Up;In guest;On place;Yes;No
+Down;In guest;On place;No;Yes</textarea>
                 <div id="TreeSettingsValue"></div>
             </div>
             <div class="start-btn">
@@ -50,7 +35,7 @@
             </div>
             <p>Your csv-text for Answer</p>
             <div class="square">
-                <textarea id="InputParams" rows="11" cols="30" spellcheck="false">kek;1;lol;2;cheb;3</textarea>
+                <textarea id="InputParams" rows="11" cols="30" spellcheck="false">Down;In guest;Skip;No</textarea>
             </div>
             <div class="start-btn">
                 <button id="launch" onclick="Launch()">Launch</button>
@@ -63,9 +48,11 @@
     <div class="footer">
     </div>
     <script src="../TreeDecision/PapaParse-5.0.2/papaparse.js"></script>
+    <script src="../TreeDecision/Data.js"></script>
     <script src="../TreeDecision/Node.js"></script>
     <script src="../TreeDecision/Leaf.js"></script>
     <script src="../TreeDecision/Tree.js"></script>
     <script src="../TreeDecision/Main.js"></script> 
+    <script src="../TreeDecision/ID3.js"></script>
 </body>
 </html>

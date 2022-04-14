@@ -14,6 +14,9 @@ let launched = false;
 let GlobalCurrentNode;
 let GlobalCurrentTree;
 
+let massParam;
+let GlobalCurrentAnswer;
+
 
 document.getElementById('TreeSettings').addEventListener('keyup', function() {
     TREE_CSV = document.getElementById('TreeSettings').value;
@@ -24,75 +27,47 @@ document.getElementById('InputParams').addEventListener('keyup', function() {
 }, false);
 
 function CreateTree() {
+    ctx.clearRect(0, 0, canv.width, canv.height);
     mass = new Array();
+    massData = new Array();
+    massParam = new Array();
 
     let CurrentNode = Papa.parse(TREE_CSV);
-    for (let i = 0; i < CurrentNode.data.length; i++) {
-        if (CurrentNode.data[i].length > 7) {
-            mass.push(new TNode(CurrentNode.data[i]))
-        } else {
-            mass.push(new TLeaf(CurrentNode.data[i]));
-        }
+
+    massParam = CurrentNode.data[0];
+    for (let i = 1; i < CurrentNode.data.length; i++) {
+        massData.push(new Data(CurrentNode.data[i].splice(0, CurrentNode.data[i].length - 1), CurrentNode.data[i][CurrentNode.data[i].length - 1]))
     }
+    
+    ID3(mass, massData, massParam);
 
     GlobalCurrentTree = new Tree(mass);
+
     GlobalCurrentTree.PrintTree();
+
+    console.log(GlobalCurrentTree);
 }
 
 function Launch() {
-    let CurrentNode = Papa.parse(ANSW_CSV);
+    GlobalCurrentAnswer = Papa.parse(ANSW_CSV).data[0];
 
-    for (let i = 0; i < CurrentNode.data[0].length; i += 2) {
-        for (let j = 0; j < mass.length; j++) {
-
-            if (mass[j].Var1 == CurrentNode.data[0][i]) {
-                mass[j].Value1 = CurrentNode.data[0][i + 1];
-            }
-
-            if (mass[j].Var2 == CurrentNode.data[0][i]) {
-                mass[j].Value2 = CurrentNode.data[0][i + 1];
-            }
-
-        }
-    }
     GlobalCurrentNode = mass[0];
+
     launched = true;
 } 
 
 function Render() {
     if (launched) {
         let NextNode = null;
-        
+
         if (GlobalCurrentNode instanceof TNode) {
-            if (GlobalCurrentNode.Operator == '<') {
-                if (GlobalCurrentNode.Value1 < GlobalCurrentNode.Value2) {
-                    NextNode = mass[GlobalCurrentNode.ChildIndex[GlobalCurrentNode.ChildIndex.length - 1] - 1];
-                } else {
-                    NextNode = mass[GlobalCurrentNode.ChildIndex[0] - 1];
-                }
-            } else if (GlobalCurrentNode.Operator == '<=') {
-                if (GlobalCurrentNode.Value1 <= GlobalCurrentNode.Value2) {
-                    NextNode = mass[GlobalCurrentNode.ChildIndex[GlobalCurrentNode.ChildIndex.length - 1] - 1];
-                } else {
-                    NextNode = mass[GlobalCurrentNode.ChildIndex[0] - 1];
-                }
-            } else if (GlobalCurrentNode.Operator == '==') {
-                if (GlobalCurrentNode.Value1 == GlobalCurrentNode.Value2) {
-                    NextNode = mass[GlobalCurrentNode.ChildIndex[GlobalCurrentNode.ChildIndex.length - 1] - 1];
-                } else {
-                    NextNode = mass[GlobalCurrentNode.ChildIndex[0] - 1];
-                }
-            } else if (GlobalCurrentNode.Operator == '>') {
-                if (GlobalCurrentNode.Value1 > GlobalCurrentNode.Value2) {
-                    NextNode = mass[GlobalCurrentNode.ChildIndex[GlobalCurrentNode.ChildIndex.length - 1] - 1];
-                } else {
-                    NextNode = mass[GlobalCurrentNode.ChildIndex[0] - 1];
-                }
-            } else if (GlobalCurrentNode.Operator == '>=') {
-                if (GlobalCurrentNode.Value1 >= GlobalCurrentNode.Value2) {
-                    NextNode = mass[GlobalCurrentNode.ChildIndex[GlobalCurrentNode.ChildIndex.length - 1] - 1];
-                } else {
-                    NextNode = mass[GlobalCurrentNode.ChildIndex[0] - 1];
+            for (let i = 0; i < massParam.length; i++) {
+                if (massParam[i] == GlobalCurrentNode.Name) {
+                    for (let j = 0; j < GlobalCurrentNode.ChildName.length; j++) {
+                        if (GlobalCurrentNode.ChildName[j] == GlobalCurrentAnswer[i]) {
+                            NextNode = mass[GlobalCurrentNode.ChildIndex[j]];
+                        }
+                    }
                 }
             }
         }
