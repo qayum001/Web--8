@@ -1,8 +1,11 @@
-function Brush(x, y, r, context, Color){
-    context.fillStyle = Color;
+function Brush(px, py, nx, ny, r, context, Color){
+    context.strokeStyle = Color;
+    ctx.lineCap = "round";
+    ctx.lineWidth = r;
     context.beginPath();
-    context.arc(x, y, r, 0, Math.PI * 2, true);
-    context.fill();
+    ctx.moveTo(px,py);
+    ctx.lineTo(nx, ny);
+    ctx.stroke();
 }
 function GetMatrixFromImage(context){
     let resultInput = new Array()
@@ -31,4 +34,11 @@ function AIAnswer(neuralNetwork, inputs){
 function sigmoid(a = 0){
     let res = 1 / (1 + Math.pow(Math.E, -a));
     return res;
+}
+
+function getEdges(x, y, r, edges){
+    if(x < edges[0]) edges[0] = x - 100;
+    else if(x > edges[1]) edges[1] = x + 100;
+    if(y < edges[2]) edges[2] = y - 100;
+    else if(y > edges[3]) edges[3] = y + 100;
 }
