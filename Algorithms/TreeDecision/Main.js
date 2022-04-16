@@ -14,12 +14,15 @@ let Created = false;
 
 let GlobalCurrentNode;
 let GlobalCurrentTree;
+let GlobalCurrentNodeIndex;
 
 let massParam;
 let GlobalCurrentAnswer;
 
 let moveX = 0;
 let moveY = 0;
+
+let RenderNode = null;
 
 let Scale = 1, maxScale = 3, minScale = 0.5, stepScale = 0.1;
 
@@ -59,6 +62,7 @@ function CreateTree() {
     ctx.clearRect(0, 0, canv.width, canv.height);
 
     Created = true;
+    RenderNode = null;
 
     mass = new Array();
     massData = new Array();
@@ -81,26 +85,31 @@ function CreateTree() {
 }
 
 function RenderTree() {
-    if (Created) CreateTree();
+    if (Created) {
+        ctx.clearRect(0, 0, canv.width, canv.height);
+        GlobalCurrentTree.PrintTree();
+        GlobalCurrentTree.PrintNode(mass[GlobalCurrentNodeIndex], mass[GlobalCurrentNodeIndex].Position.x, mass[GlobalCurrentNodeIndex].Position.y, '#0090FF')
+    }
 }
 function Launch() {
     GlobalCurrentAnswer = Papa.parse(ANSW_CSV).data[0];
 
     GlobalCurrentNode = mass[0];
+    GlobalCurrentNodeIndex = 0;
 
     launched = true;
 } 
 
 function Render() {
     if (launched) {
-        let NextNode = null;
+        let NextIndex = null;
 
-        if (GlobalCurrentNode instanceof TNode) {
+        if (mass[GlobalCurrentNodeIndex] instanceof TNode) {
             for (let i = 0; i < massParam.length; i++) {
-                if (massParam[i] == GlobalCurrentNode.Name) {
-                    for (let j = 0; j < GlobalCurrentNode.ChildName.length; j++) {
-                        if (GlobalCurrentNode.ChildName[j] == GlobalCurrentAnswer[i]) {
-                            NextNode = mass[GlobalCurrentNode.ChildIndex[j]];
+                if (massParam[i] == mass[GlobalCurrentNodeIndex].Name) {
+                    for (let j = 0; j < mass[GlobalCurrentNodeIndex].ChildName.length; j++) {
+                        if (mass[GlobalCurrentNodeIndex].ChildName[j] == GlobalCurrentAnswer[i]) {
+                            NextIndex = mass[GlobalCurrentNodeIndex].ChildIndex[j];
                         }
                     }
                 }
@@ -108,13 +117,13 @@ function Render() {
         }
 
         GlobalCurrentTree.PrintTree();
-        GlobalCurrentTree.PrintNode(GlobalCurrentNode, GlobalCurrentNode.Position.x, GlobalCurrentNode.Position.y, '#0090FF')
+        GlobalCurrentTree.PrintNode(mass[GlobalCurrentNodeIndex], mass[GlobalCurrentNodeIndex].Position.x, mass[GlobalCurrentNodeIndex].Position.y, '#0090FF');
 
-        if (NextNode == null) {
-            document.getElementById('Answer').textContent = "Answer: " +  GlobalCurrentNode.Name;
+        if (NextIndex == null) {
+            document.getElementById('Answer').textContent = "Answer: " +  mass[GlobalCurrentNodeIndex].Name;
             launched = false;
         } else {
-            GlobalCurrentNode = NextNode;
+            GlobalCurrentNodeIndex = NextIndex;
         }
     }
 }

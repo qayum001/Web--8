@@ -98,6 +98,7 @@ class Tree {
         let X = Math.round(CurX);
         let Y = Math.round(CurY);
 
+        ctx.fillStyle = CurrentNode.Color
         ctx.beginPath();
         ctx.rect(X, Y, this.WidthNode, this.HeightNode);
         ctx.closePath();

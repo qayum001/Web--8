@@ -63,7 +63,7 @@ function GetHeuristicPathLength(from, to) {//Вычисление еврести
 }
 
 function GetDistanceBetweenNeighbours(from, to) {
-    //return 1; для обычного хода, ниже для оптимального на глаз маршрута
+    //return 1; //для обычного хода, ниже для оптимального на глаз маршрута
     if (from.x !== to.x && from.y !== to.y) {
         return Math.sqrt(2);
     }
