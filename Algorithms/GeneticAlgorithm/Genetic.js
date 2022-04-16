@@ -19,6 +19,10 @@ let Count = 0;
 let MinimalDistance;
 let BestIndividualToRender
 
+let CurrentMatrix;
+let AnotherCurrentGeneration;
+let AnotherMinimalDistance;
+
 function AlgorithmGenetic(mass, Generations, Population, Mutation) {
     Matrix = CreateMatrixAdjacency(mass);
     CurrentGeneration = new Generation(mass, Matrix, Population, Mutation);
@@ -30,12 +34,25 @@ function AlgorithmGenetic(mass, Generations, Population, Mutation) {
 
 function Render() {
     if (Count > 0 && typeof(CurrentGeneration) != 'undefined') {
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i < 50; i++) {
             document.getElementById('MinimalLength').textContent = Math.round(CurrentGeneration.BestIndividual.Distance);
             document.getElementById('Generations').textContent = Count;
             CurrentGeneration.NextGeneration();
             Count++;
+            if (Count > Generations) {
+                break;
+            }
+            if (Count % 401 == 400) {
+                AnotherCurrentGeneration = new Generation(mass, Matrix, Population, Mutation);
+                for (let j = 0; j < Count; j++) {
+                    AnotherCurrentGeneration.NextGeneration();
+                }
+                if (CurrentGeneration.BestIndividual.Distance > AnotherCurrentGeneration.BestIndividual.Distance) {
+                    CurrentGeneration = AnotherCurrentGeneration;
+                }
+            }
         }
+        
     }
     
 

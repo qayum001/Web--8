@@ -13,7 +13,7 @@ let pointToDrow = new Array();//collects points to drow with printPoint()
 canv.width = rows * pixelSize;
 canv.height = columns * pixelSize;
 
-let lol = new Array();//contains Labyrinth
+let lol = matrixArray(rows, columns, 0);//contains Labyrinth
 
 window.requestAnimationFrame(printLabyrinth);
 window.requestAnimationFrame(printPoint);
@@ -29,7 +29,7 @@ let finishPosSetter = false;
 
 let pointsToClear = [];//для очищения лабиринта от А*
 
-let correctX, correctY, matrixX, matrixy;
+let correctX, correctY, matrixX, matrixY;
 
 function startPosBtn(){
     startPosSetter = true;
@@ -43,16 +43,14 @@ function Launch(){
     let fX = Number(document.getElementById('finishPositionX').value);
     let fY = Number(document.getElementById('finishPositionY').value);
     
+    pointToDrowPath = new Array();
+    Refresh();
     FindPath(lol, new point(sX, sY), new point(fX, fY));
     printPoint();
     pointsToClear = pointToDrowPath;
     if(pointsToClear.length > 0){
         Clear(pointsToClear, 'gray');
     }
-}
-function ClearAStar(){
-    //console.log(pointsToClear.length);
-    //Clear(pointsToClear, 'gray');
 }
 function Clear(clearArr, color){// получает массив типа point который будет покрашен в данный цвет,
     ctx.fillStyle = color;
@@ -80,11 +78,15 @@ canv.onclick = function(event){
         document.getElementById('startPositionX').value = matrixX;
         document.getElementById('startPositionY').value = matrixY;
         startPosSetter = false;
+        Refresh();
+        pointDrowStartFinish(new point(matrixX, matrixY), new point(document.getElementById('finishPositionX').value, document.getElementById('finishPositionY').value));
     }
     if(finishPosSetter){
         document.getElementById('finishPositionX').value = matrixX;
         document.getElementById('finishPositionY').value = matrixY;
         finishPosSetter = false;
+        Refresh();
+        pointDrowStartFinish(new point(document.getElementById('startPositionX').value, document.getElementById('startPositionY').value), new point(matrixX, matrixY))
     }
 }
 canv.onmousedown = function(){
@@ -102,7 +104,7 @@ canv.onmousemove = function(event){//Gets mouse pos and drows smth
     matrixX = correctX / pixelSize;
     matrixY = correctY / pixelSize;
 
-    if(isDrowable){
+    if(isDrowable && !startPosSetter && !finishPosSetter){
         let flag = true;//позволяет не перекрашивать один и тотже пиксель вовремя передвижения мыши
         if(isSetBtnActive && lol[matrixX][matrixY] == 0){
             lol[matrixX][matrixY] = 1;
@@ -204,7 +206,6 @@ function Labyrinth(lab, rows, columns){//returns Labyrinth
 widthSetter.oninput = function(){
     pointToDrow = [];
     rows = document.getElementById('widthSetter').value;
-    console.log("rows " + rows)
     if(rows > maxRows){
         rows = maxRows;
     }
@@ -213,7 +214,6 @@ widthSetter.oninput = function(){
 heightSetter.oninput = function(){
     pointToDrow = [];
     columns = document.getElementById('heightSetter').value;
-    console.log("columns " + columns)
     if(columns > maxColumns){
         columns = maxColumns;
     }
@@ -224,11 +224,12 @@ function Create(){//Creates new Labyrinth
         pointToDrow = [];
     }
     ctx.clearRect(0, 0, canv.width, canv.height);
-    lol = Labyrinth(matrixArray(rows, columns), rows, columns);
-    console.log(lol.length + " lenght");
+    lol = Labyrinth(matrixArray(rows, columns, 1), rows, columns);
     printLabyrinth();
 }
 function printLabyrinth(){//Animates how Labyrinth was drawning up
+    pointDrowStartFinish(new point(Number(document.getElementById('startPositionX').value), Number(document.getElementById('startPositionY').value)), new point(Number(document.getElementById('finishPositionX').value), Number(document.getElementById('finishPositionY').value)));
+
     let currentPoints = pointToDrow.splice(0, Math.ceil(pointToDrow.length * 0.0067));
     for(let i = 0; i < currentPoints.length; i++){
         if(currentPoints[i].type == 'inter'){
@@ -243,14 +244,24 @@ function printLabyrinth(){//Animates how Labyrinth was drawning up
         window.requestAnimationFrame(printLabyrinth);
     }
 }
-function matrixArray(rows, columns) {//returns a matrix filled with Walls
+function matrixArray(rows, columns, number) {//returns a matrix filled with Walls
     let arr = new Array();
+
+    pointDrowStartFinish(new point(Number(document.getElementById('startPositionX').value), Number(document.getElementById('startPositionY').value)), new point(Number(document.getElementById('finishPositionX').value), Number(document.getElementById('finishPositionY').value)));
+
     for(let i = 0; i < rows; i++) {
         arr[i] = new Array();
         for(let j = 0; j < columns; j++) {
-            arr[i][j] = 1;
+            arr[i][j] = number;
+            if (number == 0) {
+                ctx.fillStyle = 'gray';
+                ctx.fillRect(i * pixelSize, j * pixelSize, pixelSize, pixelSize);
+            }
         }
     }
+
+    pointDrowStartFinish(new point(Number(document.getElementById('startPositionX').value), Number(document.getElementById('startPositionY').value)), new point(Number(document.getElementById('finishPositionX').value), Number(document.getElementById('finishPositionY').value)));
+
     return arr;
 }
 function point(x, y, type){
@@ -294,4 +305,21 @@ function isClear(arr, x, y){// check wall(1)
     }else{
         return false;
     }
+}
+function Refresh() {
+    for (let i = 0; i < lol.length; i++) {
+        for (let j = 0; j < lol[i].length; j++) {
+            if (lol[i][j] == 0) {
+                ctx.fillStyle = 'gray';
+                ctx.fillRect(i * pixelSize, j * pixelSize, pixelSize, pixelSize);
+            } else if (lol[i][j] == 1) {
+                ctx.fillStyle = '#000910';
+                ctx.fillRect(i * pixelSize, j * pixelSize, pixelSize, pixelSize);
+            }
+        }
+    }
+}
+function clearMatrix() {
+    lol = matrixArray(rows, columns, 0);
+    pointDrowStartFinish(new point(Number(document.getElementById('startPositionX').value), Number(document.getElementById('startPositionY').value)), new point(Number(document.getElementById('finishPositionX').value), Number(document.getElementById('finishPositionY').value)));
 }

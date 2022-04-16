@@ -94,5 +94,5 @@ function Render(){
         window.requestAnimationFrame(Render);
     }
 }
-window.requestAnimationFrame(Render);
-//setInterval("console.log(Nodes)",1000);
+//window.requestAnimationFrame(Render);
+setInterval("console.log(Nodes)", 16);

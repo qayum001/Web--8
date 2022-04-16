@@ -30,12 +30,13 @@
             <div class="wall-btns">
                 <button class="wall-make" onclick="setWall()">Set wall</button>
                 <button class="wall-make" onclick="removeWall()">Remove wall</button>
+                <button class="wall-make" onclick="clearMatrix()">Clear</button>
             </div>
             <div class="square">
                 <p>Start position</p>
                 <div class="size-inputs">
-                    <input type="number" id="startPositionX"/>
-                    <input type="number" id="startPositionY"/>
+                    <input type="number" id="startPositionX" value="1"/>
+                    <input type="number" id="startPositionY" value="1"/>
                 </div>
                 <div class="labCreate-btn">
                     <button class="setter" onclick="startPosBtn()">Set on map</button>
@@ -44,8 +45,8 @@
             <div class="square">
                 <p>Finish Position</p>
                 <div class="size-inputs">
-                    <input type="number" id="finishPositionX"/>
-                    <input type="number" id="finishPositionY"/>
+                    <input type="number" id="finishPositionX" value="69"/>
+                    <input type="number" id="finishPositionY" value="69"/>
                 </div>
                 <div class="labCreate-btn">
                     <button class="setter" onclick="finishPosBtn()">Set on map</button>
@@ -58,7 +59,7 @@
     </div>
     <div class="footer">
     </div>
-    <script src="../Code/AStar.js"></script>
-    <script src="../Code/LabyrinthCreator.js"></script>    
+    <script src="../AStar/AStar.js"></script>
+    <script src="../AStar/LabyrinthCreator.js"></script>    
 </body>
 </html>

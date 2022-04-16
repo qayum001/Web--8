@@ -111,7 +111,7 @@ function Render() {
         GlobalCurrentTree.PrintNode(GlobalCurrentNode, GlobalCurrentNode.Position.x, GlobalCurrentNode.Position.y, '#0090FF')
 
         if (NextNode == null) {
-            document.getElementById('Answer').textContent = GlobalCurrentNode.Name;
+            document.getElementById('Answer').textContent = "Answer: " +  GlobalCurrentNode.Name;
             launched = false;
         } else {
             GlobalCurrentNode = NextNode;
